@@ -5,130 +5,124 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Relatório de Vendas</title>
 <style>
-  /* Fundo gradiente animado em rosa */
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-  }
+/* Fundo gradiente animado em rosa */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+}
 
-  @keyframes gradientBG {
-    0% {background-position:0% 50%;}
-    50% {background-position:100% 50%;}
-    100% {background-position:0% 50%;}
-  }
+@keyframes gradientBG {
+  0% {background-position:0% 50%;}
+  50% {background-position:100% 50%;}
+  100% {background-position:0% 50%;}
+}
 
+.container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+h1 {
+  text-align: center;
+  color: #d6336c;
+  margin-bottom: 20px;
+}
+
+/* Logo */
+#logo {
+  display: block;
+  margin: 0 auto 20px auto;
+  max-width: 150px;
+}
+
+/* Formulário */
+form label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+form input, form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+form button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #d6336c;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+form button:hover {
+  background-color: #a52753;
+}
+
+/* Feed rolável horizontal */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 30px;
+}
+table {
+  width: 100%;
+  min-width: 1200px;
+  border-collapse: collapse;
+}
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px;
+  text-align: center;
+  font-size: 14px;
+}
+table th {
+  background-color: #f8c0d6;
+  color: #333;
+}
+
+/* Botões Editar/Excluir */
+table button {
+  padding: 4px 8px;
+  margin: 2px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #fff;
+}
+table button:hover { opacity: 0.8; }
+.edit-btn { background-color: #007bff; }
+.delete-btn { background-color: #dc3545; }
+
+/* Responsivo celular */
+@media (max-width: 768px) {
   .container {
-    max-width: 950px;
-    margin: 20px auto;
-    padding: 20px;
-    background: rgba(255,255,255,0.95);
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  }
-
-  h1 {
-    text-align: center;
-    color: #d6336c;
-    margin-bottom: 20px;
-  }
-
-  /* Logo */
-  #logo {
-    display: block;
-    margin: 0 auto 20px auto;
-    max-width: 150px;
-  }
-
-  /* Formulário */
-  form label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-  }
-  form input, form textarea {
-    width: 100%;
-    padding: 8px;
-    margin-top: 4px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-  }
-  form button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    background-color: #d6336c;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  form button:hover {
-    background-color: #a52753;
-  }
-
-  /* Feed rolável */
-  .table-container {
-    width: 100%;
-    overflow-x: auto;
-    margin-top: 30px;
+    padding: 10px;
   }
   table {
-    width: 100%;
-    min-width: 1200px;
-    border-collapse: collapse;
+    font-size: 12px;
+    min-width: 1000px; /* mantém scroll horizontal */
   }
-  table th, table td {
-    border: 1px solid #ccc;
-    padding: 6px;
-    text-align: center;
+  form input, form textarea {
     font-size: 14px;
   }
-  table th {
-    background-color: #f8c0d6;
-    color: #333;
-  }
-
-  /* Botões Editar/Excluir */
-  table button {
-    padding: 4px 8px;
-    margin: 2px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    color: #fff;
-  }
-  table button:hover { opacity: 0.8; }
-  .edit-btn { background-color: #007bff; }
-  .delete-btn { background-color: #dc3545; }
-
-  /* Responsivo */
-  @media (max-width: 600px) {
-    table, tbody, tr, th, td {
-      display: block;
-    }
-    table tr { margin-bottom: 15px; }
-    table td {
-      text-align: right;
-      padding-left: 50%;
-      position: relative;
-    }
-    table td::before {
-      content: attr(data-label);
-      position: absolute;
-      left: 10px;
-      font-weight: bold;
-      text-align: left;
-    }
-  }
+}
 </style>
 </head>
 <body>
 <div class="container">
-  <img id="logo" src="sua-logo.png" alt="Logo da Empresa">
+  <img id="logo" src="logo.png" alt="Logo da Empresa">
   <h1>Relatório de Vendas</h1>
 
   <form id="form-vendas">
@@ -193,7 +187,7 @@ const form = document.getElementById('form-vendas');
 const feedBody = document.getElementById('feed-body');
 
 // Substitua pelo URL do seu Apps Script
-const API_URL = "https://script.google.com/macros/s/AKfycbz-V8mz-ePa49AwKlYGYAhJO9CA24Iw4GZhuDh8ypo_j5adMbDWcoW2baqkEUcRT9F_YA/exec";
+const API_URL = "https://script.google.com/macros/s/SEU_URL_DO_APPS_SCRIPT/exec";
 
 // Carrega feed
 function carregarFeed() {
@@ -226,10 +220,11 @@ function carregarFeed() {
     });
 }
 
-// Enviar registro
+// Função para enviar ou atualizar registro
 form.addEventListener('submit', function(e){
   e.preventDefault();
 
+  const id = document.getElementById('form-vendas').dataset.editId || "";
   const data = document.getElementById('data').value;
   const hora = document.getElementById('hora').value;
   const caixas = document.getElementById('caixas').value;
@@ -240,35 +235,9 @@ form.addEventListener('submit', function(e){
   const sobraramUnidades = document.getElementById('sobraramUnidades').value;
   const observacoes = document.getElementById('observacoes').value;
 
-  fetch(API_URL, {
-    method: "POST",
-    body: new URLSearchParams({
-      data, hora, caixas, unidades,
-      vendidosCaixas, vendidosUnidades,
-      sobraramCaixas, sobraramUnidades,
-      observacoes
-    })
-  })
-  .then(res => res.json())
-  .then(() => {
-    carregarFeed();
-    form.reset();
-  });
-});
+  const action = id ? "edit" : "";
 
-// Editar registro
-function editarRegistro(id) {
-  const data = prompt("Nova data (yyyy-mm-dd):");
-  const hora = prompt("Nova hora (hh:mm):");
-  const caixas = prompt("Nova quantidade de caixas:");
-  const unidades = prompt("Novas unidades:");
-  const vendidosCaixas = prompt("Vendidos (caixas):");
-  const vendidosUnidades = prompt("Vendidos (unidades):");
-  const sobraramCaixas = prompt("Sobraram (caixas):");
-  const sobraramUnidades = prompt("Sobraram (unidades):");
-  const observacoes = prompt("Observações:");
-
-  fetch(API_URL + "?action=edit", {
+  fetch(API_URL + (action ? "?action=edit" : ""), {
     method: "POST",
     body: new URLSearchParams({
       id, data, hora, caixas, unidades,
@@ -277,7 +246,35 @@ function editarRegistro(id) {
       observacoes
     })
   })
-  .then(() => carregarFeed());
+  .then(res => res.json())
+  .then(() => {
+    form.reset();
+    delete form.dataset.editId;
+    carregarFeed();
+  });
+});
+
+// Editar registro
+function editarRegistro(id) {
+  fetch(API_URL)
+    .then(res => res.json())
+    .then(registros => {
+      const r = registros.find(x => x.id == id);
+      if (!r) return alert("Registro não encontrado");
+
+      // Preenche formulário
+      document.getElementById('data').value = r.data;
+      document.getElementById('hora').value = r.hora;
+      document.getElementById('caixas').value = r.caixas;
+      document.getElementById('unidades').value = r.unidades;
+      document.getElementById('vendidosCaixas').value = r.vendidosCaixas;
+      document.getElementById('vendidosUnidades').value = r.vendidosUnidades;
+      document.getElementById('sobraramCaixas').value = r.sobraramCaixas;
+      document.getElementById('sobraramUnidades').value = r.sobraramUnidades;
+      document.getElementById('observacoes').value = r.observacoes;
+
+      document.getElementById('form-vendas').dataset.editId = id;
+    });
 }
 
 // Excluir registro
@@ -296,4 +293,3 @@ carregarFeed();
 </script>
 </body>
 </html>
-
