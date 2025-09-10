@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório de Vendas</title>
+<style>
+  /* Fundo gradiente animado em rosa */
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+  }
+
+  @keyframes gradientBG {
+    0% {background-position:0% 50%;}
+    50% {background-position:100% 50%;}
+    100% {background-position:0% 50%;}
+  }
+
+  .container {
+    max-width: 950px;
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+
+  h1 {
+    text-align: center;
+    color: #d6336c;
+    margin-bottom: 20px;
+  }
+
+  /* Logo */
+  #logo {
+    display: block;
+    margin: 0 auto 20px auto;
+    max-width: 150px;
+  }
+
+  /* Formulário */
+  form label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  form input, form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 4px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  form button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #d6336c;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  form button:hover {
+    background-color: #a52753;
+  }
+
+  /* Feed rolável */
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 30px;
+  }
+  table {
+    width: 100%;
+    min-width: 1200px;
+    border-collapse: collapse;
+  }
+  table th, table td {
+    border: 1px solid #ccc;
+    padding: 6px;
+    text-align: center;
+    font-size: 14px;
+  }
+  table th {
+    background-color: #f8c0d6;
+    color: #333;
+  }
+
+  /* Botões Editar/Excluir */
+  table button {
+    padding: 4px 8px;
+    margin: 2px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+  }
+  table button:hover { opacity: 0.8; }
+  .edit-btn { background-color: #007bff; }
+  .delete-btn { background-color: #dc3545; }
+
+  /* Responsivo */
+  @media (max-width: 600px) {
+    table, tbody, tr, th, td {
+      display: block;
+    }
+    table tr { margin-bottom: 15px; }
+    table td {
+      text-align: right;
+      padding-left: 50%;
+      position: relative;
+    }
+    table td::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 10px;
+      font-weight: bold;
+      text-align: left;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <img id="logo" src="sua-logo.png" alt="Logo da Empresa">
+  <h1>Relatório de Vendas</h1>
+
+  <form id="form-vendas">
+    <label for="data">Data:</label>
+    <input type="date" id="data" required>
+
+    <label for="hora">Hora:</label>
+    <input type="time" id="hora" required>
+
+    <label for="caixas">Caixas levadas:</label>
+    <input type="number" id="caixas" min="0" required>
+
+    <label for="unidades">Unidades soltas:</label>
+    <input type="number" id="unidades" min="0" required>
+
+    <label for="vendidosCaixas">Vendidos (caixas):</label>
+    <input type="number" id="vendidosCaixas" min="0" required>
+
+    <label for="vendidosUnidades">Vendidos (unidades):</label>
+    <input type="number" id="vendidosUnidades" min="0" required>
+
+    <label for="sobraramCaixas">Sobraram (caixas):</label>
+    <input type="number" id="sobraramCaixas" min="0" required>
+
+    <label for="sobraramUnidades">Sobraram (unidades):</label>
+    <input type="number" id="sobraramUnidades" min="0" required>
+
+    <label for="observacoes">Observações:</label>
+    <textarea id="observacoes" rows="2"></textarea>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Hora</th>
+          <th>Caixas</th>
+          <th>Unidades</th>
+          <th>Total Doces</th>
+          <th>Vendidos (caixas)</th>
+          <th>Vendidos (unidades)</th>
+          <th>Total Vendidos</th>
+          <th>Sobraram (caixas)</th>
+          <th>Sobraram (unidades)</th>
+          <th>Total Sobraram</th>
+          <th>Observações</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="feed-body">
+        <!-- registros vão aparecer aqui -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const form = document.getElementById('form-vendas');
+const feedBody = document.getElementById('feed-body');
+
+// Substitua pelo URL do seu Apps Script
+const API_URL = "COLE_AQUI_SEU_URL_DO_APPS_SCRIPT";
+
+// Carrega feed
+function carregarFeed() {
+  fetch(API_URL)
+    .then(res => res.json())
+    .then(registros => {
+      feedBody.innerHTML = "";
+      registros.forEach(r => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td data-label="Data">${r.data}</td>
+          <td data-label="Hora">${r.hora}</td>
+          <td data-label="Caixas">${r.caixas}</td>
+          <td data-label="Unidades">${r.unidades}</td>
+          <td data-label="Total Doces">${r.totalDoces}</td>
+          <td data-label="Vendidos (caixas)">${r.vendidosCaixas}</td>
+          <td data-label="Vendidos (unidades)">${r.vendidosUnidades}</td>
+          <td data-label="Total Vendidos">${r.totalVendidos}</td>
+          <td data-label="Sobraram (caixas)">${r.sobraramCaixas}</td>
+          <td data-label="Sobraram (unidades)">${r.sobraramUnidades}</td>
+          <td data-label="Total Sobraram">${r.totalSobraram}</td>
+          <td data-label="Observações">${r.observacoes}</td>
+          <td data-label="Ações">
+            <button class="edit-btn" onclick="editarRegistro('${r.id}')">Editar</button>
+            <button class="delete-btn" onclick="excluirRegistro('${r.id}')">Excluir</button>
+          </td>
+        `;
+        feedBody.appendChild(row);
+      });
+    });
+}
+
+// Enviar registro
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+
+  const data = document.getElementById('data').value;
+  const hora = document.getElementById('hora').value;
+  const caixas = document.getElementById('caixas').value;
+  const unidades = document.getElementById('unidades').value;
+  const vendidosCaixas = document.getElementById('vendidosCaixas').value;
+  const vendidosUnidades = document.getElementById('vendidosUnidades').value;
+  const sobraramCaixas = document.getElementById('sobraramCaixas').value;
+  const sobraramUnidades = document.getElementById('sobraramUnidades').value;
+  const observacoes = document.getElementById('observacoes').value;
+
+  fetch(API_URL, {
+    method: "POST",
+    body: new URLSearchParams({
+      data, hora, caixas, unidades,
+      vendidosCaixas, vendidosUnidades,
+      sobraramCaixas, sobraramUnidades,
+      observacoes
+    })
+  })
+  .then(res => res.json())
+  .then(() => {
+    carregarFeed();
+    form.reset();
+  });
+});
+
+// Editar registro
+function editarRegistro(id) {
+  const data = prompt("Nova data (yyyy-mm-dd):");
+  const hora = prompt("Nova hora (hh:mm):");
+  const caixas = prompt("Nova quantidade de caixas:");
+  const unidades = prompt("Novas unidades:");
+  const vendidosCaixas = prompt("Vendidos (caixas):");
+  const vendidosUnidades = prompt("Vendidos (unidades):");
+  const sobraramCaixas = prompt("Sobraram (caixas):");
+  const sobraramUnidades = prompt("Sobraram (unidades):");
+  const observacoes = prompt("Observações:");
+
+  fetch(API_URL + "?action=edit", {
+    method: "POST",
+    body: new URLSearchParams({
+      id, data, hora, caixas, unidades,
+      vendidosCaixas, vendidosUnidades,
+      sobraramCaixas, sobraramUnidades,
+      observacoes
+    })
+  })
+  .then(() => carregarFeed());
+}
+
+// Excluir registro
+function excluirRegistro(id) {
+  if (!confirm("Deseja realmente excluir este registro?")) return;
+
+  fetch(API_URL + "?action=delete", {
+    method: "POST",
+    body: new URLSearchParams({id})
+  })
+  .then(() => carregarFeed());
+}
+
+// Carrega feed ao abrir
+carregarFeed();
+</script>
+</body>
+</html>
